@@ -48,9 +48,11 @@ After that, `running aggregate_llm_predictions.py` to aggregate the predictions.
 
 ```bib
 @article{jia2024g3,
-  title={G3: An Effective and Adaptive Framework for Worldwide Geolocalization Using Large Multi-Modality Models},
+  title={G3: an effective and adaptive framework for worldwide geolocalization using large multi-modality models},
   author={Jia, Pengyue and Liu, Yiding and Li, Xiaopeng and Zhao, Xiangyu and Wang, Yuhao and Du, Yantong and Han, Xiao and Wei, Xuetao and Wang, Shuaiqiang and Yin, Dawei},
-  journal={arXiv preprint arXiv:2405.14702},
+  journal={Advances in Neural Information Processing Systems},
+  volume={37},
+  pages={53198--53221},
   year={2024}
 }
 ```
