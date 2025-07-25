@@ -25,6 +25,8 @@ pip install transformers accelerate huggingface_hub pandas
 
 You can run `python run_G3.py` to train the model.
 
+Please contact me with `jia.pengyue@my.cityu.edu.hk` to get the pre-trained checkpoint `g3.pth`.
+
 2. Geo-diversification
 
 First, you need to build the index file using `python IndexSearch.py`. 
