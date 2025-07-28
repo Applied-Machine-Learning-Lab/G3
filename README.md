@@ -19,6 +19,8 @@ pip install torch==2.1.1 torchvision==0.16.1 torchaudio==2.1.1 --index-url https
 pip install transformers accelerate huggingface_hub pandas
 ```
 
+If there are any issues with transformers, you may try `transformers==4.42.0`.
+
 # Running samples
 
 1. Geo-alignment
