@@ -30,8 +30,15 @@ If there are any issues with transformers, you may try `transformers==4.42.0`.
 ## Similarity between GPS and Images
 
 ```python
+import torch
+import numpy as np
+from PIL import Image
+from utils.G3 import G3
+
+model = G3('cuda')
+model.load_state_dict(torch.load('./checkpoints/g3.pth'))
 image = Image.open(your_img_path).convert('RGB')
-image = self.vision_processor(images=image, return_tensors='pt')['pixel_values'].reshape(3,224,224)
+image = model.vision_processor(images=image, return_tensors='pt')['pixel_values'].reshape(3,224,224)
 
 images = image.reshape(1,3,224,224) # pretend as a batch
 
@@ -39,6 +46,7 @@ images = images.to(args.device) # b,3,224,224
 image_embeds = model.vision_projection_else_2(model.vision_projection(model.vision_model(images)[1]))
 image_embeds = image_embeds / image_embeds.norm(p=2, dim=-1, keepdim=True) # b, 768
 
+gps_batch = torch.tensor([[0,0],[0,0]]).to('cuda').reshape(1,2,2) # (latitude, longitude)
 gps_batch = gps_batch.to(args.device) # b,n,2; n is the number of candidates
 gps_input = gps_batch.clone().detach()
 b, c, _ = gps_input.shape

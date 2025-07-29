@@ -19,7 +19,7 @@ from utils.G3 import G3
 def build_index(args):
     if args.index == 'g3':
         model = G3('cuda')
-        model.load_state_dict(torch.load('/home/pyjia2/code/GA3/g3.pth'))
+        model.load_state_dict(torch.load('./checkpoints/g3.pth'))
         # model = torch.load('./checkpoints/g3.pth', map_location='cuda:0')
         model.requires_grad_(False)
         vision_processor = model.vision_processor
@@ -50,7 +50,7 @@ def search_index(args, index, topk):
     if args.dataset == 'im2gps3k':
         if args.index == 'g3':
             model = G3('cuda')
-            model.load_state_dict(torch.load('/home/pyjia2/code/GA3/g3.pth'))
+            model.load_state_dict(torch.load('./checkpoints/g3.pth'))
             # model = torch.load('./checkpoints/g3.pth', map_location='cuda:0')
             model.requires_grad_(False)
             vision_processor = model.vision_processor
@@ -83,7 +83,7 @@ def search_index(args, index, topk):
     elif args.dataset == 'yfcc4k':
         if args.index == 'g3':
             model = G3('cuda')
-            model.load_state_dict(torch.load('/home/pyjia2/code/GA3/g3.pth'))
+            model.load_state_dict(torch.load('./checkpoints/g3.pth'))
             # model = torch.load('./checkpoints/g3.pth', map_location='cuda:0')
             model.requires_grad_(False)
             vision_processor = model.vision_processor
@@ -161,7 +161,7 @@ def evaluate(args, I):
 
         df_llm = pd.read_csv(f'./data/{args.dataset}/{args.dataset}_prediction.csv')
         model = G3('cuda')
-        model.load_state_dict(torch.load('/home/pyjia2/code/GA3/g3.pth'))
+        model.load_state_dict(torch.load('./checkpoints/g3.pth'))
         # model = torch.load('./checkpoints/g3.pth', map_location='cuda:0')
         topn = 5 # number of candidates
 
