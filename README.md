@@ -36,6 +36,7 @@ from PIL import Image
 from utils.G3 import G3
 
 image_path = 'xxx'
+gps_data = [[10,20],[0,0]] # [[latitude1, longitude1],[latitude2, longitude2]]
 device = 'cuda'
 
 model = G3(device).to(device)
@@ -49,7 +50,7 @@ images = images.to(device) # b,3,224,224
 image_embeds = model.vision_projection_else_2(model.vision_projection(model.vision_model(images)[1]))
 image_embeds = image_embeds / image_embeds.norm(p=2, dim=-1, keepdim=True) # b, 768
 
-gps_batch = torch.tensor([[10,20],[0,0]]).reshape(1,2,2) # [[latitude1, longitude1],[latitude2, longitude2]]
+gps_batch = torch.tensor(gps_data).reshape(1,2,2)
 gps_batch = gps_batch.to(device) # b,n,2; n is the number of candidates
 gps_input = gps_batch.clone().detach()
 b, c, _ = gps_input.shape
