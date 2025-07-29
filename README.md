@@ -46,7 +46,7 @@ images = images.to(args.device) # b,3,224,224
 image_embeds = model.vision_projection_else_2(model.vision_projection(model.vision_model(images)[1]))
 image_embeds = image_embeds / image_embeds.norm(p=2, dim=-1, keepdim=True) # b, 768
 
-gps_batch = torch.tensor([[0,0],[0,0]]).to('cuda').reshape(1,2,2) # (latitude, longitude)
+gps_batch = torch.tensor([[0,0],[0,0]]).to('cuda').reshape(1,2,2) # [[latitude1, longitude1],[latitude2, longitude2]]
 gps_batch = gps_batch.to(args.device) # b,n,2; n is the number of candidates
 gps_input = gps_batch.clone().detach()
 b, c, _ = gps_input.shape
