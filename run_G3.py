@@ -66,7 +66,8 @@ def main():
     for epoch in range(10):
         train_1epoch(dataloader, eval_dataloader, earlystopper, model, model.vision_processor, model.text_processor, optimizer, scheduler, device, accelerator)
         unwrapped_model = accelerator.unwrap_model(model)
-        torch.save(unwrapped_model, 'checkpoints/g3_{}_.pth'.format(epoch))
+        torch.save(unwrapped_model, 'checkpoints/g3_{}.pth'.format(epoch))
+        torch.save(unwrapped_model.state_dict(), 'checkpoints/g3_{}_state_dict.pth'.format(epoch))
 
 if __name__ == '__main__':
     main()

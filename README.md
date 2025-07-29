@@ -10,6 +10,10 @@ IM2GPS3K: [images](http://www.mediafire.com/file/7ht7sn78q27o9we/im2gps3ktest.zi
 
 YFCC4K: [images](http://www.mediafire.com/file/3og8y3o6c9de3ye/yfcc4k.zip) | [metadata](https://github.com/TIBHannover/GeoEstimation/releases/download/pytorch/yfcc25600_places365.csv)
 
+# Checkpoint
+
+You can download the checkpoints and retrieval index from [Jia-py/G3-checkpoint](https://huggingface.co/Jia-py/G3-checkpoint)
+
 # Environment Setting
 
 ```bash
@@ -21,13 +25,41 @@ pip install transformers accelerate huggingface_hub pandas
 
 If there are any issues with transformers, you may try `transformers==4.42.0`.
 
+# Quick Use
+
+## Similarity between GPS and Images
+
+```python
+image = Image.open(your_img_path).convert('RGB')
+image = self.vision_processor(images=image, return_tensors='pt')['pixel_values'].reshape(3,224,224)
+
+images = image.reshape(1,3,224,224) # pretend as a batch
+
+images = images.to(args.device) # b,3,224,224
+image_embeds = model.vision_projection_else_2(model.vision_projection(model.vision_model(images)[1]))
+image_embeds = image_embeds / image_embeds.norm(p=2, dim=-1, keepdim=True) # b, 768
+
+gps_batch = gps_batch.to(args.device) # b,n,2; n is the number of candidates
+gps_input = gps_batch.clone().detach()
+b, c, _ = gps_input.shape
+gps_input = gps_input.reshape(b*c, 2)
+location_embeds = model.location_encoder(gps_input)
+location_embeds = model.location_projection_else(location_embeds.reshape(b*c, -1))
+location_embeds = location_embeds / location_embeds.norm(p=2, dim=-1, keepdim=True)
+location_embeds = location_embeds.reshape(b, c, -1) #  b, c, 768
+
+similarity = torch.matmul(image_embeds.unsqueeze(1), location_embeds.permute(0, 2, 1)) # b, 1, c
+similarity = similarity.squeeze(1).cpu().detach().numpy()
+max_idxs = np.argmax(similarity, axis=1)
+```
+
+This code can be easily adapted to calculate the similarity between text and images. Please check the source code in G3. The `vision_projection_else_2` layer should be modified accordingly.
+
 # Running samples
 
 1. Geo-alignment
 
 You can run `python run_G3.py` to train the model.
-
-Please contact me with `jia.pengyue@my.cityu.edu.hk` to get the pre-trained checkpoint `g3.pth`.
 
 2. Geo-diversification
 

@@ -14,10 +14,13 @@ from torch.utils.data import DataLoader
 from tqdm import tqdm
 from torch.utils.data import Dataset, DataLoader
 from datetime import datetime
+from utils.G3 import G3
 
 def build_index(args):
     if args.index == 'g3':
-        model = torch.load('./checkpoints/g3.pth', map_location='cuda:0')
+        model = G3('cuda')
+        model.load_state_dict(torch.load('/home/pyjia2/code/GA3/g3.pth'))
+        # model = torch.load('./checkpoints/g3.pth', map_location='cuda:0')
         model.requires_grad_(False)
         vision_processor = model.vision_processor
         dataset = MP16Dataset(vision_processor = model.vision_processor, text_processor = None)
@@ -46,7 +49,9 @@ def search_index(args, index, topk):
     print('start searching...')
     if args.dataset == 'im2gps3k':
         if args.index == 'g3':
-            model = torch.load('./checkpoints/g3.pth', map_location='cuda:0')
+            model = G3('cuda')
+            model.load_state_dict(torch.load('/home/pyjia2/code/GA3/g3.pth'))
+            # model = torch.load('./checkpoints/g3.pth', map_location='cuda:0')
             model.requires_grad_(False)
             vision_processor = model.vision_processor
             dataset = im2gps3kDataset(vision_processor = vision_processor, text_processor = None)
@@ -77,7 +82,9 @@ def search_index(args, index, topk):
             return D, I
     elif args.dataset == 'yfcc4k':
         if args.index == 'g3':
-            model = torch.load('./checkpoints/g3.pth', map_location='cuda:0')
+            model = G3('cuda')
+            model.load_state_dict(torch.load('/home/pyjia2/code/GA3/g3.pth'))
+            # model = torch.load('./checkpoints/g3.pth', map_location='cuda:0')
             model.requires_grad_(False)
             vision_processor = model.vision_processor
             dataset = yfcc4kDataset(vision_processor = vision_processor, text_processor = None)
@@ -153,7 +160,9 @@ def evaluate(args, I):
         df['LON_pred'] = df.apply(lambda x: database.loc[x['NN_idx'],'LON'], axis=1)
 
         df_llm = pd.read_csv(f'./data/{args.dataset}/{args.dataset}_prediction.csv')
-        model = torch.load('./checkpoints/g3.pth', map_location='cuda:0')
+        model = G3('cuda')
+        model.load_state_dict(torch.load('/home/pyjia2/code/GA3/g3.pth'))
+        # model = torch.load('./checkpoints/g3.pth', map_location='cuda:0')
         topn = 5 # number of candidates
 
         dataset = GeoImageDataset(df_llm, f'./data/{args.dataset}/images', topn, vision_processor=model.vision_processor, database_df=database, I=I)
